@@ -30,8 +30,11 @@ Here is a point-by-point description of the code:
 4. The **`mint`** function allows anyone to mint a new NFT and assign it to the specified recipient. It increments the token ID counter, assigns the new ID to the recipient by calling the **`_mint`** function from the ERC721 contract, and returns the newly minted token ID.
 5. The **`burn`** function allows the contract owner to burn (delete) an existing NFT. It calls the **`_burn`** function from the ERC721 contract to remove the NFT from existence.
 
-———————————————————————————————————————
-**What I have done:**
+——————————————————————————————————————---------------------------------------------------
+# What I have done
 1- My Repo consists of Contract
 2- It also consists deployment script and its testing with **100% Coverage**
 3- The repository consists of proper **natspec Comment and documentation**.
+
+# Description of Test cases:
+
