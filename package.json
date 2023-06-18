@@ -21,6 +21,7 @@
     "@openzeppelin/contracts": "^4.9.2",
     "dotenv": "^16.3.1",
     "hardhat-deploy": "^0.11.25",
-    "hardhat-deploy-ethers": "^0.3.0-beta.13"
+    "hardhat-deploy-ethers": "^0.3.0-beta.13",
+    "web3-eth-abi": "^4.0.1"
   }
 }

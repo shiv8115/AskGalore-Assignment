@@ -15,6 +15,11 @@ contract WrappedERC20 is ERC20 {
     // tokenId => isDeposited
     mapping(uint256 => bool) private tokenIdIsDepositedInContract;
 
+    mapping(address => uint256) public idOfOwner; // It track the id of user when user mint NFT by depositing ERC20 in the contract
+
+    // It keep track when user deposit ERC20 and Mint ERC721 user=>(tokenId=>true/false)
+    mapping(address => mapping(uint256 => bool)) private isNftMinted;
+
     IERC721 nftContractAddress;
 
     /// @dev This event is fired when a user deposits NFT into the contract in exchange
@@ -27,12 +32,28 @@ contract WrappedERC20 is ERC20 {
     /// @param tokenId  The token id of the NFT that was withdrawn from the contract.
     event BurnTokenAndWithdrawERC721Id(uint256 tokenId);
 
+    /**
+     * @dev Initializes the WrappedERC20 contract.
+     * @param name The name of the ERC20 token.
+     * @param symbol The symbol of the ERC20 token.
+     * @param erc721 The address of the ERC721 contract.
+     */
     constructor(
         string memory name,
         string memory symbol,
         address erc721
     ) ERC20(name, symbol) {
         nftContractAddress = IERC721(erc721);
+    }
+
+    /**
+    @dev Mints ERC20 tokens and transfers them to the specified address.
+    @param to The address to which the ERC20 tokens will be minted and transferred.
+    @param amount The amount of ERC20 tokens to mint and transfer.
+    */
+    function mintERC20(address to, uint256 amount) external {
+        require(to != address(0), "Address cannot be zero");
+        _mint(to, amount);
     }
 
     /**
@@ -89,6 +110,39 @@ contract WrappedERC20 is ERC20 {
         emit BurnTokenAndWithdrawERC721Id(_tokenId);
     }
 
+    /// Mapping from ERC20 to ERC721, we can get NFT by exchanging of ERC20 Token and that ERC721 user can use and transfer between accounts
+    /// Mints an NFT by depositing ERC20 tokens.
+    /// _user The address of the user who will receive the minted NFT.
+    function mintNFTByDepositingERC20(address _user) external {
+        require(_user != address(0), "Address cannot be zero");
+        require(
+            balanceOf(_user) >= 1000,
+            "You have not sufficient Token for Mint NFT"
+        );
+        transfer(address(this), 1000);
+
+        uint256 id = nftContractAddress.mint(_user);
+        idOfOwner[_user] = id;
+        isNftMinted[_user][id] = true;
+    }
+
+    /**
+    @dev Burns an NFT and transfers ERC20 tokens to the specified user.
+    @param _user The address of the user who will receive the ERC20 tokens.
+    @param tokenId The ID of the NFT to be burned.
+    */
+    function burnNFTAndGetERC20(address _user, uint256 tokenId) external {
+        require(
+            nftContractAddress.ownerOf(tokenId) == _user,
+            "token does not exist"
+        );
+        require(isNftMinted[_user][tokenId] == true, "tokenId already burned");
+        IERC20(address(this)).transfer(_user, 1000);
+        nftContractAddress.burn(tokenId);
+        isNftMinted[_user][tokenId] = false;
+        delete idOfOwner[_user];
+    }
+
     /// @notice Adds a locked tokenId to the end of the array
     /// @param _tokenId  The id of the NFT that will be locked into the contract.
 
@@ -97,9 +151,8 @@ contract WrappedERC20 is ERC20 {
         tokenIdIsDepositedInContract[_tokenId] = true;
     }
 
-    
-/// This function is the implementation of the ERC721Receiver interface. 
-// It returns the selector of the onERC721Received function to indicate support for ERC721 token transfers.
+    /// This function is the implementation of the ERC721Receiver interface.
+    // It returns the selector of the onERC721Received function to indicate support for ERC721 token transfers.
     function onERC721Received(
         address /* operator */,
         address /* from */,

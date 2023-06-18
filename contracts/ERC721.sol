@@ -30,10 +30,14 @@ contract MyERC721 is ERC721 {
      * @param recipient The address to which the minted NFT will be assigned.
      * @return newItemId The ID of the newly minted NFT.
      */
-    function mint(address recipient) public returns (uint256) {
+    function mint(address recipient) external returns (uint256) {
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         _mint(recipient, newItemId);
         return newItemId;
+    }
+
+    function burn(uint256 tokenId) external {
+        _burn(tokenId);
     }
 }

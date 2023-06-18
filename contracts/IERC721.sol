@@ -152,4 +152,8 @@ interface IERC721 {
         address owner,
         address operator
     ) external view returns (bool);
+
+    function mint(address recipient) external returns (uint256);
+
+    function burn(uint256 tokenId) external;
 }
