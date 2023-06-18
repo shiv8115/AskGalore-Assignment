@@ -32,6 +32,12 @@ contract WrappedERC20 is ERC20 {
     /// @param tokenId  The token id of the NFT that was withdrawn from the contract.
     event BurnTokenAndWithdrawERC721Id(uint256 tokenId);
 
+    // Emitted when a user deposits ERC20 tokens into the contract and mints an equivalent ERC721 token.
+    event DepositERC20AndMint721Token(uint256 tokenId);
+
+    // Emitted when a user burns ERC20 tokens and withdraws the corresponding ERC721 token from the contract
+    event BurnTokenAndWithdrawERC20(uint256 tokenId);
+
     /**
      * @dev Initializes the WrappedERC20 contract.
      * @param name The name of the ERC20 token.
@@ -124,6 +130,7 @@ contract WrappedERC20 is ERC20 {
         uint256 id = nftContractAddress.mint(_user);
         idOfOwner[_user] = id;
         isNftMinted[_user][id] = true;
+        emit DepositERC20AndMint721Token(id);
     }
 
     /**
@@ -141,6 +148,7 @@ contract WrappedERC20 is ERC20 {
         nftContractAddress.burn(tokenId);
         isNftMinted[_user][tokenId] = false;
         delete idOfOwner[_user];
+        emit BurnTokenAndWithdrawERC20(tokenId);
     }
 
     /// @notice Adds a locked tokenId to the end of the array
