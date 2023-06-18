@@ -9,8 +9,10 @@ import "./IERC721.sol";
 contract WrappedERC20 is ERC20 {
     using SafeMath for uint256;
 
+    // this variable keep track of deposited tokenID
     uint256[] private depositedTokenIdArray;
 
+    // tokenId => isDeposited
     mapping(uint256 => bool) private tokenIdIsDepositedInContract;
 
     IERC721 nftContractAddress;
