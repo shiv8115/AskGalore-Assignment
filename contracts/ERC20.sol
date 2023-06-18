@@ -6,20 +6,22 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./IERC721.sol";
 
+/**
+@notice WrappedERC20 acts as a bridge between an ERC20 token and an ERC721 non-fungible token (NFT). The contract allows users to deposit ERC721 tokens and mint an equivalent number of ERC20 tokens, and vice versa.
+ */
 contract WrappedERC20 is ERC20 {
     using SafeMath for uint256;
 
-    // this variable keep track of deposited tokenID
-    uint256[] private depositedTokenIdArray;
-
-    // tokenId => isDeposited
+    // Mapping to track if a token ID is deposited in the contract
     mapping(uint256 => bool) private tokenIdIsDepositedInContract;
 
-    mapping(address => uint256) public idOfOwner; // It track the id of user when user mint NFT by depositing ERC20 in the contract
+    // Mapping to track the ID of the owner when a user mints an NFT by depositing ERC20 in the contract
+    mapping(address => uint256) public idOfOwner;
 
-    // It keep track when user deposit ERC20 and Mint ERC721 user=>(tokenId=>true/false)
+    // Mapping to track when a user deposits ERC20 and mints ERC721 tokens
     mapping(address => mapping(uint256 => bool)) private isNftMinted;
 
+    // Address of the ERC721 contract
     IERC721 nftContractAddress;
 
     /// @dev This event is fired when a user deposits NFT into the contract in exchange
@@ -151,14 +153,6 @@ contract WrappedERC20 is ERC20 {
         emit BurnTokenAndWithdrawERC20(tokenId);
     }
 
-    /// @notice Adds a locked tokenId to the end of the array
-    /// @param _tokenId  The id of the NFT that will be locked into the contract.
-
-    function _pushTokenId(uint256 _tokenId) internal {
-        depositedTokenIdArray.push(_tokenId);
-        tokenIdIsDepositedInContract[_tokenId] = true;
-    }
-
     /// This function is the implementation of the ERC721Receiver interface.
     // It returns the selector of the onERC721Received function to indicate support for ERC721 token transfers.
     function onERC721Received(
@@ -168,5 +162,11 @@ contract WrappedERC20 is ERC20 {
         bytes calldata /* data */
     ) external pure returns (bytes4) {
         return this.onERC721Received.selector;
+    }
+
+    /// @notice Adds a locked tokenId to the end of the array
+    /// @param _tokenId  The id of the NFT that will be locked into the contract.
+    function _pushTokenId(uint256 _tokenId) internal {
+        tokenIdIsDepositedInContract[_tokenId] = true;
     }
 }

@@ -37,6 +37,10 @@ contract MyERC721 is ERC721 {
         return newItemId;
     }
 
+    /**
+     * @dev Burns the ERC721 token with the specified token ID.
+     * @param tokenId The token ID of the ERC721 token to be burned.
+     */
     function burn(uint256 tokenId) external {
         _burn(tokenId);
     }

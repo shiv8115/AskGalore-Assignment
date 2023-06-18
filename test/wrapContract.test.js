@@ -57,17 +57,26 @@ describe("Contract Creation", function () {
 
   describe("Testing Functionality mapping from ERC721 to ERC20", function () {
     //It tests the minting of an ERC721 token and verifies the balance of the token owner.
-    it("Should mint token id", async function () {
+    it("should successfully mint a new token", async function () {
+      // Get the owner's address
       const [owner] = await ethers.getSigners();
+
+      // Deploy the NFT contract using the fixture
       const { token } = await loadFixture(deployNFTContractFixture);
 
+      // Mint a new token and assign it to the owner's address
       await token.mint(owner.address);
-      expect(await token.balanceOf(owner.address)).to.equal(1);
+
+      // Check the balance of the owner's address
+      const ownerBalance = await token.balanceOf(owner.address);
+
+      // Assert that the balance is equal to 1
+      expect(ownerBalance).to.equal(1);
     });
 
     //It tests the approval of an ERC721 token to the Wrapper ERC20 contract
     // verifies the approval status.
-    it("Should Approve to the Wrapper contract", async function () {
+    it("should approve the Wrapper contract for token transfer", async function () {
       const [owner] = await ethers.getSigners();
       const { wrapToken, token } = await loadFixture(
         deployWrapperContractFixture
@@ -78,12 +87,13 @@ describe("Contract Creation", function () {
 
       await token.approve(wrapToken.address, 1);
 
+      // Assert that the approved address is the Wrapper contract's address
       expect(await token.getApproved(1)).to.equal(wrapToken.address);
     });
 
     //It tests the transfer of an ERC721 token to the Wrapper ERC20 contract
     // verifies the corresponding ERC20 balance.
-    it("Transfer NFT to the wrapper Contract and get corresponding ERC20 Token", async function () {
+    it("should transfer NFT to the Wrapper contract and get corresponding ERC20 token", async function () {
       const [owner] = await ethers.getSigners();
       const { wrapToken, token } = await loadFixture(
         deployWrapperContractFixture
@@ -105,7 +115,7 @@ describe("Contract Creation", function () {
 
     // It tests the transfer of the Wrapper ERC20 token between accounts
     // verifies the updated balances
-    it("Wrapped Minted token can transfer between accounts", async function () {
+    it("should allow wrapped minted tokens to be transferred between accounts", async function () {
       const [owner, addr1] = await ethers.getSigners();
       const { wrapToken, token } = await loadFixture(
         deployWrapperContractFixture
@@ -126,7 +136,7 @@ describe("Contract Creation", function () {
 
     // It tests the process of returning an ERC721 token from the Wrapper ERC20 contract to the original owner
     // verifies the balances and ownership
-    it("User can getback NFT and ERC20 Token should be burned", async function () {
+    it("should allow users to get back their NFT and burn the corresponding ERC20 tokens", async function () {
       const [owner, addr1] = await ethers.getSigners();
       const { wrapToken, token } = await loadFixture(
         deployWrapperContractFixture
@@ -155,7 +165,7 @@ describe("Contract Creation", function () {
 
     //It tests the transfer of an ERC721 token from one account to another
     // verifies the updated balances and ownership
-    it("User can transfer NFT between different accounts", async function () {
+    it("should allow users to transfer NFT between different accounts", async function () {
       const [owner, addr1] = await ethers.getSigners();
       const { wrapToken, token } = await loadFixture(
         deployWrapperContractFixture
@@ -187,7 +197,7 @@ describe("Contract Creation", function () {
     });
 
     // it tests the approval of an ERC20 token to another account using the Wrapper ERC20 contract and verifies the approval status.
-    it("Wrapper Contract Approve to the different account", async function () {
+    it("should approve the Wrapper contract to a different account", async function () {
       const [owner] = await ethers.getSigners();
       const { wrapToken, token } = await loadFixture(
         deployWrapperContractFixture
@@ -204,7 +214,7 @@ describe("Contract Creation", function () {
     });
 
     // It tests the exchange of ERC20 tokens for an ERC721 token using the Wrapper ERC20 contract
-    it("User can exhange ERC20 Token and able to get NFT", async function () {
+    it("should allow users to exchange ERC20 tokens for an ERC721 token", async function () {
       const [owner] = await ethers.getSigners();
       const { wrapToken, token } = await loadFixture(
         deployWrapperContractFixture
@@ -219,7 +229,7 @@ describe("Contract Creation", function () {
     });
 
     // It tests that a user can mint an ERC721 token by exchanging ERC20 tokens using the Wrapper ERC20 contract and verifies the ownership.
-    it("User are able to mint NFT by exchanging tokens", async function () {
+    it("should allow users to mint an ERC721 token by exchanging tokens", async function () {
       const [owner] = await ethers.getSigners();
       const { wrapToken, token } = await loadFixture(
         deployWrapperContractFixture
@@ -233,7 +243,7 @@ describe("Contract Creation", function () {
 
     // It tests the withdrawal of ERC20 tokens from the Wrapper ERC20 contract
     // It ensures that the corresponding ERC721 token is burned.
-    it("User can withdrawn its ERC20 token and NFT token should be burn", async function () {
+    it("should allow users to withdraw ERC20 tokens and burn the corresponding ERC721 token", async function () {
       const [owner] = await ethers.getSigners();
       const { wrapToken, token } = await loadFixture(
         deployWrapperContractFixture
@@ -257,7 +267,7 @@ describe("Contract Creation", function () {
     });
 
     // It tests the transfer of a newly minted ERC721 token from one account to another
-    it("User can transfer Newly NFT between different accounts", async function () {
+    it("should allow users to transfer a newly minted ERC721 token between different accounts", async function () {
       const [owner, addr1] = await ethers.getSigners();
       const { wrapToken, token } = await loadFixture(
         deployWrapperContractFixture
