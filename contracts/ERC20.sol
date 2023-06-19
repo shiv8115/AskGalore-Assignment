@@ -16,7 +16,7 @@ contract WrappedERC20 is ERC20 {
     mapping(uint256 => bool) private tokenIdIsDepositedInContract;
 
     // Mapping to track the ID of the owner when a user mints an NFT by depositing ERC20 in the contract
-    mapping(address => uint256) public idOfOwner;
+    mapping(address => uint256) public nftTokenIdByOwner;
 
     // Mapping to track when a user deposits ERC20 and mints ERC721 tokens
     mapping(address => mapping(uint256 => bool)) private isNftMinted;
@@ -32,13 +32,13 @@ contract WrappedERC20 is ERC20 {
     /// @dev This event is fired when a user deposits ERC20 tokens into the contract in exchange
     ///  for an equal number of locked token ID.
     /// @param tokenId  The token id of the NFT that was withdrawn from the contract.
-    event BurnTokenAndWithdrawERC721Id(uint256 tokenId);
+    event BurnERC20AndWithdrawERC721(uint256 tokenId);
 
     // Emitted when a user deposits ERC20 tokens into the contract and mints an equivalent ERC721 token.
     event DepositERC20AndMint721Token(uint256 tokenId);
 
     // Emitted when a user burns ERC20 tokens and withdraws the corresponding ERC721 token from the contract
-    event BurnTokenAndWithdrawERC20(uint256 tokenId);
+    event BurnERC721AndWithdrawERC20(uint256 tokenId);
 
     /**
      * @dev Initializes the WrappedERC20 contract.
@@ -115,7 +115,7 @@ contract WrappedERC20 is ERC20 {
             _tokenId
         );
         tokenIdIsDepositedInContract[_tokenId] = false;
-        emit BurnTokenAndWithdrawERC721Id(_tokenId);
+        emit BurnERC20AndWithdrawERC721(_tokenId);
     }
 
     /// Mapping from ERC20 to ERC721, we can get NFT by exchanging of ERC20 Token and that ERC721 user can use and transfer between accounts
@@ -130,7 +130,7 @@ contract WrappedERC20 is ERC20 {
         transfer(address(this), 1000);
 
         uint256 id = nftContractAddress.mint(_user);
-        idOfOwner[_user] = id;
+        nftTokenIdByOwner[_user] = id;
         isNftMinted[_user][id] = true;
         emit DepositERC20AndMint721Token(id);
     }
@@ -149,8 +149,8 @@ contract WrappedERC20 is ERC20 {
         IERC20(address(this)).transfer(_user, 1000);
         nftContractAddress.burn(tokenId);
         isNftMinted[_user][tokenId] = false;
-        delete idOfOwner[_user];
-        emit BurnTokenAndWithdrawERC20(tokenId);
+        delete nftTokenIdByOwner[_user];
+        emit BurnERC721AndWithdrawERC20(tokenId);
     }
 
     /// This function is the implementation of the ERC721Receiver interface.
