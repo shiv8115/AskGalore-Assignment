@@ -39,3 +39,5 @@ Here is a point-by-point description of the code:
 # Description of Test cases:
 
 ![Alt text](image.png)
+![Screenshot from 2023-06-19 10-53-16](https://github.com/shiv8115/AskGalore-Assignment/assets/89718330/9e5d47f7-288f-4cbd-a15a-b384dbcd3279)
+
