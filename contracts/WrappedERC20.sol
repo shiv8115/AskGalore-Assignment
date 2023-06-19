@@ -14,10 +14,10 @@ contract WrappedERC20 is ERC20 {
     using SafeMath for uint256;
 
     // Mapping to track if a token ID is deposited in the contract
-    mapping(uint256 => bool) private tokenIdIsDepositedInContract; // use owner of
+    mapping(uint256 => bool) private tokenIdIsDepositedInContract; 
 
     // Mapping to track the ID of the owner when a user mints an NFT by depositing ERC20 in the contract
-    mapping(address => uint256) public nftTokenIdByOwner; // uint256=> address
+    mapping(address => uint256) public nftTokenIdByOwner;
 
     // Mapping to track when a user deposits ERC20 and mints ERC721 tokens
     mapping(address => mapping(uint256 => bool)) private isNftMinted;
