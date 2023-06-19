@@ -106,7 +106,7 @@ describe("Contract Creation", function () {
 
       expect(await token.getApproved(1)).to.equal(wrapToken.address);
 
-      await wrapToken.depositTokenIdAndMintTokens(1);
+      await wrapToken.depositNFTAndMintTokens(1);
 
       expect(await token.balanceOf(wrapToken.address)).to.equal(1);
 
@@ -125,7 +125,7 @@ describe("Contract Creation", function () {
 
       await token.approve(wrapToken.address, 1);
 
-      await wrapToken.depositTokenIdAndMintTokens(1);
+      await wrapToken.depositNFTAndMintTokens(1);
 
       await wrapToken.transfer(addr1.address, 600);
 
@@ -146,7 +146,7 @@ describe("Contract Creation", function () {
 
       await token.approve(wrapToken.address, 1);
 
-      await wrapToken.depositTokenIdAndMintTokens(1);
+      await wrapToken.depositNFTAndMintTokens(1);
 
       // Before
       expect(await token.ownerOf(1)).to.equal(wrapToken.address);
@@ -155,7 +155,7 @@ describe("Contract Creation", function () {
 
       // After deposit ERC20 token and get back 1 NFT
 
-      await wrapToken.burnTokensAndWithdrawId(1, owner.address);
+      await wrapToken.burnTokensAndWithdrawNFT(1, owner.address);
 
       expect(await token.ownerOf(1)).to.equal(owner.address);
       expect(await token.balanceOf(owner.address)).to.equal(1);
@@ -175,9 +175,9 @@ describe("Contract Creation", function () {
 
       await token.approve(wrapToken.address, 1);
 
-      await wrapToken.depositTokenIdAndMintTokens(1);
+      await wrapToken.depositNFTAndMintTokens(1);
 
-      await wrapToken.burnTokensAndWithdrawId(1, owner.address);
+      await wrapToken.burnTokensAndWithdrawNFT(1, owner.address);
       await token.transferFrom(owner.address, addr1.address, 1);
       expect(await token.balanceOf(addr1.address)).to.equal(1);
       expect(await token.ownerOf(1)).to.equal(addr1.address);

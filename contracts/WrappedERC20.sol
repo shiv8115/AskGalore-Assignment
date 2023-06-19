@@ -14,10 +14,10 @@ contract WrappedERC20 is ERC20 {
     using SafeMath for uint256;
 
     // Mapping to track if a token ID is deposited in the contract
-    mapping(uint256 => bool) private tokenIdIsDepositedInContract;
+    mapping(uint256 => bool) private tokenIdIsDepositedInContract; // use owner of
 
     // Mapping to track the ID of the owner when a user mints an NFT by depositing ERC20 in the contract
-    mapping(address => uint256) public nftTokenIdByOwner;
+    mapping(address => uint256) public nftTokenIdByOwner; // uint256=> address
 
     // Mapping to track when a user deposits ERC20 and mints ERC721 tokens
     mapping(address => mapping(uint256 => bool)) private isNftMinted;
@@ -69,7 +69,7 @@ contract WrappedERC20 is ERC20 {
      * @dev Deposits an ERC721 token ID and mints an equivalent number of ERC20 tokens.
      * @param _tokenId The token ID of the ERC721 token to be deposited.
      */
-    function depositTokenIdAndMintTokens(uint256 _tokenId) external {
+    function depositNFTAndMintTokens(uint256 _tokenId) external {
         require(_tokenId > 0, "Id cannot be zero");
         require(
             msg.sender == nftContractAddress.ownerOf(_tokenId),
@@ -95,7 +95,7 @@ contract WrappedERC20 is ERC20 {
      * @param _tokenId The token ID of the ERC721 token to be withdrawn.
      * @param destination The address to which the withdrawn ERC721 token will be transferred.
      */
-    function burnTokensAndWithdrawId(
+    function burnTokensAndWithdrawNFT(
         uint256 _tokenId,
         address destination
     ) external {
