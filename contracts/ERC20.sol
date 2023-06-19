@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./IERC721.sol";
 
 /**
+@author Shivam Singh
 @notice WrappedERC20 acts as a bridge between an ERC20 token and an ERC721 non-fungible token (NFT). The contract allows users to deposit ERC721 tokens and mint an equivalent number of ERC20 tokens, and vice versa.
  */
 contract WrappedERC20 is ERC20 {
